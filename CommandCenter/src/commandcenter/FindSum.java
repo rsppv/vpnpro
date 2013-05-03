@@ -25,8 +25,10 @@ public class FindSum implements Task, Serializable {
      
     @Override
     public Double execute() {
-        System.out.println("Gjcxbnfk");
-        return a+b;
+        System.out.println("Получил задание...");
+        Double c = a+b;
+        System.out.println("Выполнил блабла!");
+        return c;
     }
     
 }

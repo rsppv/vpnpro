@@ -23,13 +23,16 @@ public class Agent {
         System.setProperty("java.security.policy", "agent.policy");
         RmiStarter.startRmi(Compute.class);
         try {
+            // TODO найти регистратор командного центра (ввод с консоли ip адреса)
+            
             //Runtime.getRuntime().exec("javaw rmiregistry -J-Djava.rmi.useLocalHostName=true -J-Djava.rmi.server.hostname=127.0.0.1 ");
             String name = "Compute";
             Compute engine = new ComputeEngine();
             Compute stub =
                 (Compute) UnicastRemoteObject.exportObject(engine, 0);
-            Registry registry = LocateRegistry.createRegistry(1099);
-            registry.bind(name, stub);
+            //  вместо следующего создать себя и зарегать в командном центре
+            //Registry registry = LocateRegistry.createRegistry(1099);
+            //registry.bind(name, stub);
             System.out.println("Agent ready");
         } catch (Exception e) {
             System.err.println("Agent exception: " + e.getMessage());
