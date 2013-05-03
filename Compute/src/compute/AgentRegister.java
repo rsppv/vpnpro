@@ -4,13 +4,16 @@
  */
 package compute;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
 /**
  *
  * @author aipova
  */
-public interface AgentRegister {
+public interface AgentRegister extends Remote {
     // возвращает сгенерированный командным центром id агента
-    int register(Compute stub, String ip);
+    Integer register(Compute stub, String ip) throws RemoteException;
     
-    void unRegister(int id);
+    void unRegister(Integer id) throws RemoteException;
 }
