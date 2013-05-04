@@ -4,9 +4,25 @@
         <servlet-name>StartCommandCenterServlet</servlet-name>
         <servlet-class>StartCommandCenterServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>GetAgentsServlet</servlet-name>
+        <servlet-class>GetAgentsServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SendTaskServlet</servlet-name>
+        <servlet-class>SendTaskServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>StartCommandCenterServlet</servlet-name>
         <url-pattern>/main</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetAgentsServlet</servlet-name>
+        <url-pattern>/GetAgents</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SendTaskServlet</servlet-name>
+        <url-pattern>/SendTask</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

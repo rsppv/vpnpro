@@ -15,7 +15,23 @@ public class AgentInfo {
     private Integer id;
     private Compute stub;
     private String ip;
+    private boolean free;
     // еще чтото
+
+    public boolean isFree() {
+        return free;
+    }
+
+    public void setFree(boolean isFree) {
+        this.free = isFree;
+    }
+
+    public AgentInfo(Integer id, Compute stub, String ip, boolean free) {
+        this.id = id;
+        this.stub = stub;
+        this.ip = ip;
+        this.free = free;
+    }
 
     public Integer getId() {
         return id;
@@ -48,5 +64,6 @@ public class AgentInfo {
         this.id = id;
         this.stub = stub;
         this.ip = ip;
+        this.free = true;
     }
 }
