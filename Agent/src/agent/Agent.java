@@ -19,8 +19,10 @@ import java.util.Scanner;
  *
  * @author aipova
  */
-public class Agent implements Compute{
+public class Agent {
   
+    private static AgentRegister commandCenter;
+    private static Integer id;
     /**
      * @param args the command line arguments
      */
@@ -39,23 +41,20 @@ public class Agent implements Compute{
             //System.out.println("IP:"+inetAddress.getHostAddress());
             //Runtime.getRuntime().exec("javaw rmiregistry -J-Djava.rmi.useLocalHostName=true -J-Djava.rmi.server.hostname=127.0.0.1 ");
             String name = "Compute";
-            Agent engine = new Agent();
+            ComputeEngine engine = new ComputeEngine();
             Registry registry = LocateRegistry.getRegistry(centerIP, 1099);
-            AgentRegister commandCenter = (AgentRegister) registry.lookup("AgentRegister");             
+            commandCenter = (AgentRegister) registry.lookup("AgentRegister");             
             Compute stub =
                 (Compute) UnicastRemoteObject.exportObject(engine, 0);
-            commandCenter.register(stub, agentIP); 
-            //  вместо следующего создать себя и зарегать в командном центре                        
-            //Registry registry = LocateRegistry.createRegistry(1099);
-            //registry.bind(name, stub);
+            id = commandCenter.register(stub, agentIP); 
             System.out.println("Agent ready");
         } catch (Exception e) {
             System.err.println("Agent exception: " + e.getMessage());
             e.printStackTrace();
         }
     }
+    
 
-    public Double executeTask(Task t) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+
+
 }

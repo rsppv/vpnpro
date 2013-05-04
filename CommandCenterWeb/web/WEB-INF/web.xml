@@ -6,7 +6,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>StartCommandCenterServlet</servlet-name>
-        <url-pattern>/</url-pattern>
+        <url-pattern>/main</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -5,13 +5,15 @@
  * and open the template in the editor.
  */
 import compute.AgentRegister;
-import compute.Compute;
 import compute.RmiStarter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.ExportException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +24,9 @@ import javax.servlet.http.HttpServletResponse;
  * @author aipova
  */
 public class StartCommandCenterServlet extends HttpServlet {
+
     CommandCenter center = new CommandCenter();
+
     /**
      * Processes requests for both HTTP
      * <code>GET</code> and
@@ -42,30 +46,30 @@ public class StartCommandCenterServlet extends HttpServlet {
             /*
              * TODO output your page here. You may use following sample code.
              */
-            
-            RmiStarter.startRmi(FindSum.class);
+
+
             try {
+
                 AgentRegister stub = (AgentRegister) UnicastRemoteObject.exportObject(
                     center, 0);
+                RmiStarter.startRmi(FindSum.class);
                 Registry registry = LocateRegistry.createRegistry(1099);
                 registry.bind("AgentRegister", stub);
 
-            } catch (Exception e) {
+            } catch (ExportException e) {
+                System.err.println("ObjectExportet - page recall");
+            } 
+            catch (Exception e) {
                 System.err.println("Command Center exception:");
                 e.printStackTrace();
             }
-            
-            this.vaitForAgents();
+            request.setAttribute("agents", center.getAgents().values());
+            request.getRequestDispatcher("startPage.jsp").forward(request,
+                response);
 
-//            out.println("<html>");
-//            out.println("<head>");
-//            out.println("<title>Servlet Compute</title>");            
-//            out.println("</head>");
-//            out.println("<body>");
-//            out.println(
-//                "<h1>Servlet NewServlet at " + request.getContextPath() + "</h1>");
-//            out.println("</body>");
-//            out.println("</html>");
+
+
+
         } finally {
             out.close();
         }
@@ -115,20 +119,22 @@ public class StartCommandCenterServlet extends HttpServlet {
     }// </editor-fold>
 
     private void vaitForAgents() {
-        int clientCount = center.getAgentsCount();
-        while (true) {
-            try {
-               
- 
-                new Thread(new Runnable () {
-                   public void run () {
-                       
-                   }
-                }).start();
- 
-            } catch (Exception e) {
- 
-            }
+
+        try {
+            new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    int clientCount = center.getAgentsCount();
+                    while (true) {
+                        if (center.getAgentsCount() != clientCount) {
+                        }
+                    }
+                }
+            }).start();
+
+        } catch (Exception e) {
         }
+
     }
 }

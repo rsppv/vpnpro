@@ -22,6 +22,10 @@ public class CommandCenter implements AgentRegister {
         return agents.size();
     }
     
+    public Map getAgents() {
+        return agents;
+    }
+    
     @Override
     public Integer register(Compute stub, String ip) {
         // создать AgentInfo и добавить в agents
