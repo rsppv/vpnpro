@@ -7,13 +7,11 @@
 import compute.AgentRegister;
 import compute.RmiStarter;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.ExportException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
-import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -45,7 +43,7 @@ public class StartCommandCenterServlet extends HttpServlet {
             // если это не первое обновление страницы то возникнет ошибка и не продолжать
             AgentRegister stub = (AgentRegister) UnicastRemoteObject.exportObject(
                 center, 0);
-            RmiStarter.startRmi(FindSum.class);
+            RmiStarter.startRmi(MonteCarlo.class);
             Registry registry = LocateRegistry.createRegistry(1099);
             registry.bind("AgentRegister", stub);
             this.getServletConfig().getServletContext().setAttribute(
@@ -57,7 +55,9 @@ public class StartCommandCenterServlet extends HttpServlet {
             System.err.println("Command Center exception:");
             e.printStackTrace();
         }
-
+        
+        String serverIP = InetAddress.getLocalHost().getHostAddress();
+        request.getSession().setAttribute("serverIP", serverIP);
         request.getSession().setAttribute("agents", center.getAgents().values());
         request.getRequestDispatcher("startPage.jsp").forward(request,
             response);

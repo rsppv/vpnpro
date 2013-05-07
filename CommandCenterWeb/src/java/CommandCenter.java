@@ -16,7 +16,7 @@ import java.util.Map;
 public class CommandCenter implements AgentRegister {
 
     private Map<Integer, AgentInfo> agents = new HashMap<Integer, AgentInfo>();
-    Integer forAgentsId = 0;
+    Integer forAgentsId = 1;
     
     public int getAgentsCount() {
         return agents.size();

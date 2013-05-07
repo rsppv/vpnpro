@@ -11,6 +11,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <script type="text/javascript" src="<c:url value="/js/jquery-1.9.1.min.js"/>"></script>
+        <script type="text/javascript" src="<c:url value="/js/jquery.form.js"/>"></script>
         <link href="<c:url value="/css/bootstrap.css"/>" rel="stylesheet" content="text/css" media="screen">
         <style>
 
@@ -22,19 +23,55 @@
         <script>
             $(document).ready(function(){
                 // первоначальная загрузка дивов
+                $('#taskForm').hide();
                 $('#agentDiv').load("agents.jsp");
-                $('#agentsTask').load("freeAgentsCheckbox.jsp");
                 
-                // обновление каждые 5 секунд
+                
+                // обновление каждые 3 секундs
                 setInterval(function() {
                     $('#agentDiv').load("agents.jsp");
-                    $('#agentsTask').load("freeAgentsCheckbox.jsp");
-                }, 5000);
+                }, 3000);
                 
-                // не реализовано отправка задания не нажимать на кнопку 
-                $('#taskForm').ajaxForm(function() {
-                    alert("Задание отправлено!");
-                    // спрятать форму задания
+                var options = {
+                    beforeSubmit: checkFields,
+                    success: showResult
+                };
+                
+                function checkFields(formData, jqForm, options) {
+                    // проверить поля - все заполнены, цифры
+                    // если все нормально то alert
+                    $("#taskForm").clearForm();
+                    $('#taskForm').toggle();
+                    $('#addTaskBtn').show();
+                    alert("Задание отправлено! Ожидайте ответа.");
+                    $('#resultDiv').hide();
+                }
+                
+                function showResult(responseText, statusText, xhr, $form) {
+                    // загрузить div с результатом
+                    alert("Задание выполнено!");
+                    $('#resultDiv').load("resultDiv.jsp");
+                    $('#resultDiv').show();
+                }
+                // отправка задания 
+                $('#taskForm').ajaxForm(options);
+                
+                // при нажатии кнопки показать форму
+                $('#addTaskBtn').click(function(event) {
+                    $('#agentsTask').load("freeAgentsCheckbox.jsp");
+                    $('#taskForm').toggle();
+                    $('#addTaskBtn').hide();
+                });
+                
+                // при нажатии кнопки обновить клиенты с чекбоксами
+                $('#refrBtn').click(function(event) {
+                    $('#agentsTask').load("freeAgentsCheckbox.jsp");
+                });
+                
+                // при нажатии кнопки спрятать форму
+                $('#hideTaskFormBtn').click(function(event) {
+                    $('#taskForm').toggle();
+                    $('#addTaskBtn').show();
                 });
             });
             
@@ -46,6 +83,7 @@
         <div class="container">
             <div class="masthead">
                 <h1>Command Center</h3>
+                    <h3>${serverIP}</h3>
             </div>
             <hr>
             <div class="container-fluid">
@@ -55,24 +93,32 @@
                     </div>
                     <div class="span9">
                         <!-- Спрятать форму под кнопку -->
-                        <form id="taskForm" action="/SendTask" method="post">
+                        <button class="btn btn-primary" id="addTaskBtn">Новое задание</button>
+                        <form id="taskForm" action="<c:url value="/SendTask"/>" method="post">
                             <fieldset>
                                 <legend>Новое задание</legend>
                                 <label>Функция f(x)=</label>
-                                <input type="text" name="function" value="x*x*x-Math.sin(3*x)">
+                                <input class="input-xxlarge" type="text" name="function" value="x*x*x-Math.sin(3*x)">
                                 <label>Интервал от </label>
-                                <input type="text" name="ainterval" placeholder="a">
+                                <input type="text" class="input-small" name="ainterval" placeholder="a">
                                 <label>до</label>
-                                <input type="text" name="binterval" placeholder="b">
+                                <input type="text" class="input-small" name="binterval" placeholder="b">
                                 <label>Количество точек</label>
-                                <input type="text" name="dots" value="100000">
+                                <input type="text" class="input-medium" name="dots" value="100000">
+                                <label>Отправить агентам:</label>
+                                <button class="btn btn-mini" type="button" id="refrBtn">Обновить</button>
                                 <div id="agentsTask">
                                     <!-- Список свободных агентов с чекбоксами -->
                                     <!-- Подгружается из freeAgentsCheckbox.jsp -->
                                 </div>
                                 <button type="submit" class="btn">Отправить задание</button>
+                                <button class="btn btn-primary" id="hideTaskFormBtn">Убрать форму</button>
                             </fieldset>
                         </form>
+                        <!--Здесь div  в котором будет выводиться результат - загружается из resultDiv.jsp -->
+                        <div id="resultDiv">
+
+                        </div>
                     </div>
                 </div>
             </div>

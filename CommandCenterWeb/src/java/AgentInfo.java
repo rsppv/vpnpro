@@ -66,4 +66,9 @@ public class AgentInfo {
         this.ip = ip;
         this.free = true;
     }
+    
+    @Override
+    public String toString() {
+        return "id=" + id + "; ip=" + ip;
+    }
 }

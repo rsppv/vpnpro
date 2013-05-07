@@ -23,7 +23,7 @@ public class CommandCenter implements AgentRegister {
     Integer forAgentsId = 0;
     public static void main(String[] args) {
         CommandCenter center = new CommandCenter();
-        RmiStarter.startRmi(FindSum.class);
+        RmiStarter.startRmi(MonteCarlo.class);
         try {
             AgentRegister stub = (AgentRegister) UnicastRemoteObject.exportObject(
                 center, 0);

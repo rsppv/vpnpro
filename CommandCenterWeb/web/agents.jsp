@@ -18,7 +18,7 @@
                     <c:if test="${agent.free}">
                         Свободен
                     </c:if>
-                    <c:if test="!${agent.free}">
+                    <c:if test="${agent.free==false}">
                         Занят
                     </c:if>
                 </td>
