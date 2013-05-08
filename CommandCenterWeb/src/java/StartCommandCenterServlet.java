@@ -12,6 +12,8 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.ExportException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 public class StartCommandCenterServlet extends HttpServlet {
 
     CommandCenter center = new CommandCenter();
+    List<TaskInfo> tasks = new ArrayList<TaskInfo>();
 
     /**
      * Processes requests for both HTTP
@@ -55,7 +58,7 @@ public class StartCommandCenterServlet extends HttpServlet {
             System.err.println("Command Center exception:");
             e.printStackTrace();
         }
-        
+        request.getSession().setAttribute("tasks", tasks);
         String serverIP = InetAddress.getLocalHost().getHostAddress();
         request.getSession().setAttribute("serverIP", serverIP);
         request.getSession().setAttribute("agents", center.getAgents().values());

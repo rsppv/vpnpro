@@ -28,8 +28,6 @@ public class CommandCenter implements AgentRegister {
     
     @Override
     public Integer register(Compute stub, String ip) {
-        // создать AgentInfo и добавить в agents
-        // и както отправить на страницу обновленное количество клиентов ?????
         AgentInfo newAgent = new AgentInfo(forAgentsId, stub, ip);
         forAgentsId++;
         System.out.println("Новый агент " + ip);

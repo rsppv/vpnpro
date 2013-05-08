@@ -24,6 +24,7 @@
             $(document).ready(function(){
                 // первоначальная загрузка дивов
                 $('#taskForm').hide();
+                $('#hideTaskFormBtn').hide();
                 $('#agentDiv').load("agents.jsp");
                 
                 
@@ -43,6 +44,7 @@
                     $("#taskForm").clearForm();
                     $('#taskForm').toggle();
                     $('#addTaskBtn').show();
+                    $('#hideTaskFormBtn').hide();
                     alert("Задание отправлено! Ожидайте ответа.");
                     $('#resultDiv').hide();
                 }
@@ -58,21 +60,33 @@
                 
                 // при нажатии кнопки показать форму
                 $('#addTaskBtn').click(function(event) {
-                    $('#agentsTask').load("freeAgentsCheckbox.jsp");
+                    refrAgents();
                     $('#taskForm').toggle();
                     $('#addTaskBtn').hide();
+                    $('#hideTaskFormBtn').show();
+                    $('#resultDiv').hide();
                 });
                 
                 // при нажатии кнопки обновить клиенты с чекбоксами
                 $('#refrBtn').click(function(event) {
-                    $('#agentsTask').load("freeAgentsCheckbox.jsp");
+                    refrAgents();
                 });
                 
                 // при нажатии кнопки спрятать форму
                 $('#hideTaskFormBtn').click(function(event) {
                     $('#taskForm').toggle();
                     $('#addTaskBtn').show();
+                    $('#hideTaskFormBtn').hide();
                 });
+                
+                function refrAgents(){
+                    $.ajax({
+                        type: "GET",
+                        url: "GetAgents"
+                    }).done(function() {
+                        $('#agentsTask').load("freeAgentsCheckbox.jsp");
+                    });
+                }
             });
             
             
@@ -81,11 +95,16 @@
     </head>
     <body>
         <div class="container">
-            <div class="masthead">
-                <h1>Command Center</h3>
-                    <h3>${serverIP}</h3>
+            <div class="page-header">
+                <h1>Command Center <br><small>${serverIP}</small></h1>
             </div>
-            <hr>
+            <!-- навигация -->
+            <ul class="nav nav-pills">
+                <li class="active">
+                    <a href="#">Главная</a>
+                </li>
+                <li><a href="<c:url value="/completedTasks.jsp"/>">Выполненные задания</a></li>
+            </ul>
             <div class="container-fluid">
                 <div class="row-fluid">
                     <div class="span3" id="agentDiv">
@@ -112,9 +131,10 @@
                                     <!-- Подгружается из freeAgentsCheckbox.jsp -->
                                 </div>
                                 <button type="submit" class="btn">Отправить задание</button>
-                                <button class="btn btn-primary" id="hideTaskFormBtn">Убрать форму</button>
                             </fieldset>
                         </form>
+                        <button class="btn btn-primary" id="hideTaskFormBtn">Убрать форму</button>
+
                         <!--Здесь div  в котором будет выводиться результат - загружается из resultDiv.jsp -->
                         <div id="resultDiv">
 

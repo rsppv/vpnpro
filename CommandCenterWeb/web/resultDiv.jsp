@@ -4,5 +4,5 @@
 <p>Интеграл функции F(x)=${task.function} на промежутке [${task.a}, ${task.b}] равен <b>${task.result}</b></p>
 <p>Задача выполнялась агентами:</p>
 <c:forEach  items="${task.agents}" var="agent"> 
-    Агент №${agent.id}  - ${agent.ip}</ br>
+    Агент №${agent.id}  - ${agent.ip}<br>
 </c:forEach>

@@ -105,8 +105,13 @@ public class SendTaskServlet extends HttpServlet {
             }
             fullResult /= checkedAgentsId.length;
             // поместим в ответ информацию о выполненном задании
-            request.getSession().setAttribute("task", new TaskInfo(task,
-                checkedAgents, fullResult));
+            TaskInfo madeTask = new TaskInfo(task,checkedAgents, fullResult);
+            request.getSession().setAttribute("task", madeTask);
+            // и поместим задание в общай список выполненных заданий
+            List<TaskInfo> tasks = (List<TaskInfo>)request.getSession().getAttribute("tasks");
+            tasks.add(madeTask);
+            // может и не надо опять устанавливать
+            request.getSession().setAttribute("tasks", tasks);
             System.out.println("RESULT = " + fullResult);
         } catch (Exception ex) {
             System.out.println(ex.getMessage());

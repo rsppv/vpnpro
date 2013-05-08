@@ -32,7 +32,8 @@ public class GetAgentsServlet extends HttpServlet {
         CommandCenter commandCenter = (CommandCenter) this.getServletConfig()
             .getServletContext()
             .getAttribute("commandCenter");
-        request.getSession().setAttribute("agents", commandCenter.getAgents().values());
+        // TODO проверка доступности каждого агента в списке commandCenter.getAgents().values();
+        // если недоступен то удалять из Map commandCenter.getAgents();
 
     }
 
