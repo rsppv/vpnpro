@@ -55,6 +55,7 @@ public class MonteCarlo implements Task, Serializable {
                 result += (Double) interpreter.get("result");
             } catch (EvalError ex) {
                 System.out.println(ex.getMessage());
+                
             }
 
         }

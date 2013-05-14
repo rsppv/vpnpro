@@ -2,20 +2,25 @@
 import java.util.List;
 
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * To change this template, choose Tools | Templates and open the template in
+ * the editor.
  */
-
 /**
  *
  * @author aipova
  */
 public class TaskInfo {
+
     String function;
     double a, b;
     int dots;
     List<AgentInfo> agents;
+    int agentsCount;
     Double result;
+
+    public int getAgentsCount() {
+        return agents.size();
+    }
 
     public Double getResult() {
         return result;
@@ -69,9 +74,8 @@ public class TaskInfo {
         this.function = task.function;
         this.a = task.a;
         this.b = task.b;
-        this.dots = task.dots*agents.size();
+        this.dots = task.dots * agents.size();
         this.agents = agents;
         this.result = result;
     }
-    
 }

@@ -27,8 +27,8 @@
     </head>
     <body>
         <div class="container">
-             <div class="page-header">
-                <h1>Command Center <br><small>${serverIP}</small></h1>
+            <div class="page-header">
+                <h1>Command Center <br><small>IP: ${serverIP}</small></h1>
             </div>
             <!-- навигация -->
             <ul class="nav nav-pills">
@@ -41,6 +41,7 @@
                 <c:forEach  items="${tasks}" var="task"> 
                     <div class="well">
                         Интеграл функции F(x)=${task.function} на промежутке [${task.a}, ${task.b}] равен <b>${task.result}</b></p>
+                        <p>Количество точек: ${task.dots}</p>    
                         <p>Задача выполнялась агентами:</p>
                         <c:forEach  items="${task.agents}" var="agent"> 
                             Агент №${agent.id}  - ${agent.ip}<br>

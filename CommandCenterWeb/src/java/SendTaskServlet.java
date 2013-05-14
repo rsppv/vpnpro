@@ -3,12 +3,14 @@
  * and open the template in the editor.
  */
 
+import bsh.EvalError;
+import bsh.Interpreter;
 import compute.Compute;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -40,10 +42,11 @@ public class SendTaskServlet extends HttpServlet {
         HttpServletResponse response)
         throws ServletException, IOException {
 
-        
+        String sendTaskResp="Задание выполнено!";
+        boolean error=false;
         try {
-
-            final String func = request.getParameter("function");
+            fullResult = 0.0;
+            final String func = request.getParameter("func");
             final Double ainterval = Double.parseDouble(request.getParameter(
                 "ainterval"));
             final Double binterval = Double.parseDouble(request.getParameter(
@@ -55,7 +58,14 @@ public class SendTaskServlet extends HttpServlet {
             System.out.println(ainterval);
             System.out.println(binterval);
             String[] checkedAgentsId = request.getParameterValues("agentsCheckBox");
+            if (checkedAgentsId.length == 0) throw new Exception("Не выбран ни один агент!");
             System.out.println("agents selected:");
+            // проверим парсится ли функция
+            Interpreter i = new Interpreter();
+            Random r = new Random();
+            i.set("x", r.nextDouble()*(binterval-ainterval)+ainterval);
+            // здесь может быть выброшено исключение EvalError
+            i.eval("res=" + func + ";");
             // создаем список потоков чтобы потом ждать пока все закончатся
             List<Thread> threads = new ArrayList<Thread>();
             // берем объект коммандного центра
@@ -82,8 +92,8 @@ public class SendTaskServlet extends HttpServlet {
                             // добавляем полученный результат к общему
                             addToFullResult(result);
                         } catch (RemoteException e) {
-                            System.out.println(
-                                "Client disconnected or unknown error occured");
+                            System.out.println(e.getMessage());
+                            e.printStackTrace();
                         }
                     }
                 });
@@ -97,15 +107,15 @@ public class SendTaskServlet extends HttpServlet {
             // создадим список агентов и пометим их опять свободными
             List<AgentInfo> checkedAgents = new ArrayList<AgentInfo>();
             for (String s : checkedAgentsId) {
-                AgentInfo agent = (AgentInfo) commandCenter.getAgents().get(Integer.parseInt(
-                    s));
+                AgentInfo agent = (AgentInfo) commandCenter.getAgents().get(Integer.parseInt(s));
                 checkedAgents.add(agent);
                 agent.setFree(true);
 
             }
-            fullResult /= checkedAgentsId.length;
+            System.out.println("Agents count: " + checkedAgentsId.length);
+            fullResult = fullResult / checkedAgentsId.length;
             // поместим в ответ информацию о выполненном задании
-            TaskInfo madeTask = new TaskInfo(task,checkedAgents, fullResult);
+            TaskInfo madeTask = new TaskInfo(task, checkedAgents, fullResult);
             request.getSession().setAttribute("task", madeTask);
             // и поместим задание в общай список выполненных заданий
             List<TaskInfo> tasks = (List<TaskInfo>)request.getSession().getAttribute("tasks");
@@ -113,10 +123,25 @@ public class SendTaskServlet extends HttpServlet {
             // может и не надо опять устанавливать
             request.getSession().setAttribute("tasks", tasks);
             System.out.println("RESULT = " + fullResult);
-        } catch (Exception ex) {
+         } catch (NumberFormatException ex) {
+             sendTaskResp = "Неправильно введены данные в форму!";
+             error = true;
+            // ошибка в преобразовании данных из формы!
+        }  
+        catch (EvalError ex) {
+            sendTaskResp = "Функция введена некорректно!";
+            error = true;
+            // ошибка в парсинге функции
+        }  
+        catch (Exception ex) {
+            // какято еще ошибка
+            error = true;
+            sendTaskResp = ex.getMessage();
             System.out.println(ex.getMessage());
             ex.printStackTrace();
-        } 
+        }
+        request.getSession().setAttribute("sendTaskResp", sendTaskResp);
+        request.getSession().setAttribute("error", error);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

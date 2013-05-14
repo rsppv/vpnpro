@@ -12,6 +12,13 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <script type="text/javascript" src="<c:url value="/js/jquery-1.9.1.min.js"/>"></script>
         <script type="text/javascript" src="<c:url value="/js/jquery.form.js"/>"></script>
+        <script type="text/javascript" src="<c:url value="/js/bootstrap-alert.js"/>"></script>
+        <script type="text/javascript" src="<c:url value="/js/jquery.validate.js"/>"></script>
+        <script type="text/javascript" src="<c:url value="/js/additional-methods.js"/>"></script>
+        <script type="text/javascript" src="js/noty/jquery.noty.js"></script>
+        <script type="text/javascript" src="js/noty/layouts/top.js"></script>
+        <script type="text/javascript" src="js/noty/layouts/topRight.js"></script>
+        <script type="text/javascript" src="js/noty/themes/default.js"></script>
         <link href="<c:url value="/css/bootstrap.css"/>" rel="stylesheet" content="text/css" media="screen">
         <style>
 
@@ -39,24 +46,26 @@
                 };
                 
                 function checkFields(formData, jqForm, options) {
-                    // проверить поля - все заполнены, цифры
-                    // если все нормально то alert
                     $("#taskForm").clearForm();
                     $('#taskForm').toggle();
                     $('#addTaskBtn').show();
                     $('#hideTaskFormBtn').hide();
-                    alert("Задание отправлено! Ожидайте ответа.");
+                    // здесь noty
+                    noty({text: 'Задание отправлено', layout: 'topRight', type:'information',   closeWith: ['hover']});
                     $('#resultDiv').hide();
                 }
                 
                 function showResult(responseText, statusText, xhr, $form) {
                     // загрузить div с результатом
-                    alert("Задание выполнено!");
+                    $('#alertsDiv').load("alerts.jsp");
+                    //если не ошибка только тогда показывать результат
                     $('#resultDiv').load("resultDiv.jsp");
                     $('#resultDiv').show();
                 }
-                // отправка задания 
+                
                 $('#taskForm').ajaxForm(options);
+               
+                
                 
                 // при нажатии кнопки показать форму
                 $('#addTaskBtn').click(function(event) {
@@ -96,7 +105,7 @@
     <body>
         <div class="container">
             <div class="page-header">
-                <h1>Command Center <br><small>${serverIP}</small></h1>
+                <h1>Command Center <br><small>IP: ${serverIP}</small></h1>
             </div>
             <!-- навигация -->
             <ul class="nav nav-pills">
@@ -107,24 +116,24 @@
             </ul>
             <div class="container-fluid">
                 <div class="row-fluid">
-                    <div class="span3" id="agentDiv">
+                    <div class="span4" id="agentDiv">
                         <!-- Подгружается из agents.jsp -->
                     </div>
-                    <div class="span9">
+                    <div class="span8">
                         <!-- Спрятать форму под кнопку -->
                         <button class="btn btn-primary" id="addTaskBtn">Новое задание</button>
                         <form id="taskForm" action="<c:url value="/SendTask"/>" method="post">
                             <fieldset>
-                                <legend>Новое задание</legend>
-                                <label>Функция f(x)=</label>
-                                <input class="input-xxlarge" type="text" name="function" value="x*x*x-Math.sin(3*x)">
-                                <label>Интервал от </label>
+                                <legend>Вычислить определенный интеграл.</legend>
+                                <label for="func">(*)Функция f(x)= <em></em></label>
+                                <input class="input-xxlarge" type="text" name="func" value="x*x*x-Math.sin(3*x)">
+                                <label for="ainterval">(*)Интервал от <em></em></label>
                                 <input type="text" class="input-small" name="ainterval" placeholder="a">
-                                <label>до</label>
+                                <label for="binterval">до <em></em></label>
                                 <input type="text" class="input-small" name="binterval" placeholder="b">
-                                <label>Количество точек</label>
+                                <label for="dots">Количество точек <em></em></label>
                                 <input type="text" class="input-medium" name="dots" value="100000">
-                                <label>Отправить агентам:</label>
+                                <label for="agentsCheckBox">Отправить агентам: <em></em></label>
                                 <button class="btn btn-mini" type="button" id="refrBtn">Обновить</button>
                                 <div id="agentsTask">
                                     <!-- Список свободных агентов с чекбоксами -->
@@ -134,11 +143,14 @@
                             </fieldset>
                         </form>
                         <button class="btn btn-primary" id="hideTaskFormBtn">Убрать форму</button>
-
+                        <div id="alertsDiv">
+                            <!-- здесь загружаются alert из alerts.jsp-->
+                        </div>
                         <!--Здесь div  в котором будет выводиться результат - загружается из resultDiv.jsp -->
                         <div id="resultDiv">
 
                         </div>
+
                     </div>
                 </div>
             </div>

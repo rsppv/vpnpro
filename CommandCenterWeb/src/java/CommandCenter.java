@@ -30,14 +30,14 @@ public class CommandCenter implements AgentRegister {
     public Integer register(Compute stub, String ip) {
         AgentInfo newAgent = new AgentInfo(forAgentsId, stub, ip);
         forAgentsId++;
-        System.out.println("Новый агент " + ip);
+        System.out.println("Agent connected: " + ip);
         agents.put(newAgent.getId(), newAgent);
         return newAgent.getId();
     }
 
     @Override
     public void unRegister(Integer id) {
-        System.out.println("Свалил агент " + agents.get(id).getIp());
+        System.out.println("Agent disconnected: " + agents.get(id).getIp());
         agents.remove(id);
     }
 }
