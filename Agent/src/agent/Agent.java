@@ -9,6 +9,7 @@ import compute.Compute;
 import compute.RmiStarter;
 import compute.Task;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -26,7 +27,7 @@ public class Agent {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UnknownHostException {
         System.setProperty("java.security.policy", "agent.policy");
         RmiStarter.startRmi(Compute.class);
         

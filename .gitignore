@@ -1,6 +1,9 @@
-*build
+build/
 *desktop.ini
-*dist
-*project.properties
+dist/
+nbbuild/
+nbdist/
+
+nbproject/private/
 *ant-deploy.xml
-*private.properties
+
