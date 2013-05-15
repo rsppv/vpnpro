@@ -39,7 +39,7 @@ public class Agent {
             InetAddress inetAddress = InetAddress.getLocalHost();
             String agentIP = inetAddress.getHostAddress();
             //System.out.println("IP:"+inetAddress.getHostAddress());
-            //Runtime.getRuntime().exec("javaw rmiregistry -J-Djava.rmi.useLocalHostName=true -J-Djava.rmi.server.hostname=127.0.0.1 ");
+            Runtime.getRuntime().exec("javaw rmiregistry -J-Djava.rmi.useLocalHostName=true -J-Djava.rmi.server.hostname=127.0.0.1 ");
             String name = "Compute";
             ComputeEngine engine = new ComputeEngine();
             Registry registry = LocateRegistry.getRegistry(centerIP, 1099);
@@ -48,6 +48,13 @@ public class Agent {
                 (Compute) UnicastRemoteObject.exportObject(engine, 0);
             id = commandCenter.register(stub, agentIP); 
             System.out.println("Agent ready");
+            
+            while (true){
+                if (scan.next().equals("close")) {
+                    commandCenter.unRegister(id);
+                    System.exit(0);
+                }
+            }
         } catch (Exception e) {
             System.err.println("Agent exception: " + e.getMessage());
             e.printStackTrace();
