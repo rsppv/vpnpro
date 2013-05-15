@@ -4,6 +4,6 @@ dist/
 nbbuild/
 nbdist/
 
-nbproject/private/
+
 *ant-deploy.xml
 
