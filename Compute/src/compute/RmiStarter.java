@@ -13,7 +13,12 @@ import java.io.*;
 public class RmiStarter {
     
     public static void startRmi(Class<?> classToAddInCodebase) {
-
+        
+        /* Use follow string for jdk 1.7-update 21 and newer
+         *  
+         * System.setProperty("java.rmi.server.useCodebaseOnly", "false");
+         */
+        
         System.setProperty("java.rmi.server.codebase", classToAddInCodebase
             .getProtectionDomain().getCodeSource().getLocation().toString());
 
