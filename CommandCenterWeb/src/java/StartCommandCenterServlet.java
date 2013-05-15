@@ -41,12 +41,12 @@ public class StartCommandCenterServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request,
         HttpServletResponse response)
         throws ServletException, IOException {
-
+        String serverIP = InetAddress.getLocalHost().getHostAddress();
         try {
             // если это не первое обновление страницы то возникнет ошибка и не продолжать
             AgentRegister stub = (AgentRegister) UnicastRemoteObject.exportObject(
                 center, 0);
-            RmiStarter.startRmi(MonteCarlo.class);
+            RmiStarter.startRmi(serverIP);
             Registry registry = LocateRegistry.createRegistry(1099);
             registry.bind("AgentRegister", stub);
             this.getServletConfig().getServletContext().setAttribute(
@@ -59,7 +59,7 @@ public class StartCommandCenterServlet extends HttpServlet {
             e.printStackTrace();
         }
         request.getSession().setAttribute("tasks", tasks);
-        String serverIP = InetAddress.getLocalHost().getHostAddress();
+        
         request.getSession().setAttribute("serverIP", serverIP);
         request.getSession().setAttribute("agents", center.getAgents().values());
         request.getRequestDispatcher("startPage.jsp").forward(request,

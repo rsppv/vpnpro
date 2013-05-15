@@ -29,13 +29,14 @@ public class Agent {
      */
     public static void main(String[] args) throws UnknownHostException {
         System.setProperty("java.security.policy", "agent.policy");
-        RmiStarter.startRmi(Compute.class);
+        
         
         try {
             // TODO найти регистратор командного центра (ввод с консоли ip адреса)
             Scanner scan = new Scanner(System.in);
             System.out.println("Please, type the IP address of Command Center:\n");
             String centerIP = scan.next();
+            RmiStarter.startRmi(centerIP);
             System.out.println("Please, wait. Connecting...\n");
             InetAddress inetAddress = InetAddress.getLocalHost();
             String agentIP = inetAddress.getHostAddress();
