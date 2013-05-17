@@ -12,21 +12,23 @@ import java.net.UnknownHostException;
  * @author aipova
  */
 public class RmiStarter {
-    
-    public static void startRmi(String serverIP) throws UnknownHostException {
-        
+
+    public static void startRmi(Class<?> classToAddInCodebase) throws UnknownHostException {
+
         /* Use follow string for jdk 1.7-update 21 and newer
          *  
          * System.setProperty("java.rmi.server.useCodebaseOnly", "false");
          */
-        
-        System.setProperty("java.rmi.server.codebase", "file://" + serverIP + "/classes/");
-        System.out.println(System.getProperty("java.rmi.server.codebase"));
+
+        if (classToAddInCodebase != null) {
+            System.setProperty("java.rmi.server.codebase", classToAddInCodebase
+                    .getProtectionDomain().getCodeSource().getLocation().toString());
+
+        }
         System.setProperty("java.security.policy", PolicyFileLocator.getLocationOfPolicyFile());
 
-        if(System.getSecurityManager() == null) {
+        if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
         }
     }
-    
 }

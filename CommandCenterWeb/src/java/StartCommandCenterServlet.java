@@ -27,6 +27,7 @@ public class StartCommandCenterServlet extends HttpServlet {
 
     CommandCenter center = new CommandCenter();
     List<TaskInfo> tasks = new ArrayList<TaskInfo>();
+    boolean rmiStarted = false;
 
     /**
      * Processes requests for both HTTP
@@ -39,31 +40,34 @@ public class StartCommandCenterServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request,
-        HttpServletResponse response)
-        throws ServletException, IOException {
+            HttpServletResponse response)
+            throws ServletException, IOException {
         String serverIP = InetAddress.getLocalHost().getHostAddress();
-        try {
-            // если это не первое обновление страницы то возникнет ошибка и не продолжать
-            AgentRegister stub = (AgentRegister) UnicastRemoteObject.exportObject(
-                center, 0);
-            RmiStarter.startRmi(serverIP);
-            Registry registry = LocateRegistry.createRegistry(1099);
-            registry.bind("AgentRegister", stub);
-            this.getServletConfig().getServletContext().setAttribute(
-                "commandCenter", center);
+        if (rmiStarted == false) {
 
-        } catch (ExportException e) {
-            System.err.println("ObjectExportet - page recall");
-        } catch (Exception e) {
-            System.err.println("Command Center exception:");
-            e.printStackTrace();
+            try {
+                AgentRegister stub = (AgentRegister) UnicastRemoteObject.exportObject(
+                        center, 0);
+                RmiStarter.startRmi(MonteCarlo.class);
+                Registry registry = LocateRegistry.createRegistry(1099);
+                registry.bind("AgentRegister", stub);
+                this.getServletConfig().getServletContext().setAttribute(
+                        "commandCenter", center);
+
+            } catch (ExportException e) {
+                System.err.println("ObjectExportet - page recall");
+            } catch (Exception e) {
+                System.err.println("Command Center exception:");
+                e.printStackTrace();
+            }
+
+            rmiStarted = true;
         }
         request.getSession().setAttribute("tasks", tasks);
-        
         request.getSession().setAttribute("serverIP", serverIP);
         request.getSession().setAttribute("agents", center.getAgents().values());
         request.getRequestDispatcher("startPage.jsp").forward(request,
-            response);
+                response);
 
 
     }
@@ -80,8 +84,8 @@ public class StartCommandCenterServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request,
-        HttpServletResponse response)
-        throws ServletException, IOException {
+            HttpServletResponse response)
+            throws ServletException, IOException {
         processRequest(request, response);
     }
 
@@ -96,8 +100,8 @@ public class StartCommandCenterServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request,
-        HttpServletResponse response)
-        throws ServletException, IOException {
+            HttpServletResponse response)
+            throws ServletException, IOException {
         processRequest(request, response);
     }
 

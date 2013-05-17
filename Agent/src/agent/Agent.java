@@ -36,7 +36,7 @@ public class Agent {
             Scanner scan = new Scanner(System.in);
             System.out.println("Please, type the IP address of Command Center:\n");
             String centerIP = scan.next();
-            RmiStarter.startRmi(centerIP);
+            RmiStarter.startRmi(null);
             System.out.println("Please, wait. Connecting...\n");
             InetAddress inetAddress = InetAddress.getLocalHost();
             String agentIP = inetAddress.getHostAddress();
