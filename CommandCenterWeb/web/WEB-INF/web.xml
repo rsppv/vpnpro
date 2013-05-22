@@ -9,8 +9,12 @@
         <servlet-class>GetAgentsServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>SendTaskServlet</servlet-name>
-        <servlet-class>SendTaskServlet</servlet-class>
+        <servlet-name>SendMCTaskServlet</servlet-name>
+        <servlet-class>SendMCTaskServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SendHashTaskServlet</servlet-name>
+        <servlet-class>SendHashTaskServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>StartCommandCenterServlet</servlet-name>
@@ -21,8 +25,12 @@
         <url-pattern>/GetAgents</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>SendTaskServlet</servlet-name>
-        <url-pattern>/SendTask</url-pattern>
+        <servlet-name>SendMCTaskServlet</servlet-name>
+        <url-pattern>/SendMCTask</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SendHashTaskServlet</servlet-name>
+        <url-pattern>/SendHashTask</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

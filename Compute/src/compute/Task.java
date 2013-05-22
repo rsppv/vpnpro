@@ -8,6 +8,6 @@ package compute;
  *
  * @author aipova
  */
-public interface Task {
-    Double execute(); 
+public interface Task<T> {
+    T execute(); 
 }

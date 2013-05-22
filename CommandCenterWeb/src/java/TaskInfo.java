@@ -10,14 +10,34 @@ import java.util.List;
  * @author aipova
  */
 public class TaskInfo {
+    String type;
 
     String function;
     double a, b;
     int dots;
-    List<AgentInfo> agents;
-    int agentsCount;
     Double result;
+    List<AgentInfo> agents;
+    
+    String hash;
+    String alphabet;
 
+    public String getAlphabet() {
+        return alphabet;
+    }
+
+    public void setAlphabet(String alphabet) {
+        this.alphabet = alphabet;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+    
+    int agentsCount;
     public int getAgentsCount() {
         return agents.size();
     }
@@ -26,6 +46,13 @@ public class TaskInfo {
         return result;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
     public void setResult(Double result) {
         this.result = result;
     }
@@ -71,11 +98,19 @@ public class TaskInfo {
     }
 
     public TaskInfo(MonteCarlo task, List<AgentInfo> agents, Double result) {
+        this.type = "mc";
         this.function = task.function;
         this.a = task.a;
         this.b = task.b;
         this.dots = task.dots * agents.size();
         this.agents = agents;
         this.result = result;
+    }
+    
+    public TaskInfo(PasswordHash task, List<AgentInfo> agents) {
+        this.type = "hash";
+        this.alphabet = task.alphabet;
+        this.hash = task.hash;
+        this.agents = agents;
     }
 }

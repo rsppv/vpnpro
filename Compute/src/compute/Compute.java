@@ -12,5 +12,5 @@ import java.rmi.RemoteException;
  * @author aipova
  */
 public interface Compute extends Remote {
-    Double executeTask(Task t) throws RemoteException;
+    <T> T executeTask(Task<T> t) throws RemoteException;
 }

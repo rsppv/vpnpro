@@ -19,7 +19,9 @@
                         Свободен
                     </c:if>
                     <c:if test="${agent.free==false}">
-                        Занят
+                        Занят: 
+                        <c:if test = "${agent.taskType == 'mc'}">Интеграл</c:if>
+                        <c:if test = "${agent.taskType == 'hash'}">Хеш</c:if>
                     </c:if>
                 </td>
             </tr>

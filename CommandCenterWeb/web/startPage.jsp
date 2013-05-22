@@ -30,8 +30,10 @@
         <script>
             $(document).ready(function(){
                 // первоначальная загрузка дивов
-                $('#taskForm').hide();
-                $('#hideTaskFormBtn').hide();
+                $('#MCTaskForm').hide();
+                $('#hideMCTaskFormBtn').hide();
+                $('#HashTaskForm').hide();
+                $('#hideHashTaskFormBtn').hide();
                 $('#agentDiv').load("agents.jsp");
                 
                 
@@ -40,16 +42,31 @@
                     $('#agentDiv').load("agents.jsp");
                 }, 3000);
                 
-                var options = {
-                    beforeSubmit: checkFields,
+                var optionsMC = {
+                    beforeSubmit: checkFieldsMC,
                     success: showResult
                 };
                 
-                function checkFields(formData, jqForm, options) {
-                    $("#taskForm").clearForm();
-                    $('#taskForm').toggle();
-                    $('#addTaskBtn').show();
-                    $('#hideTaskFormBtn').hide();
+                var optionsHash = {
+                    beforeSubmit: checkFieldsHash,
+                    success: showResult
+                };
+                
+                function checkFieldsMC(formData, jqForm, options) {
+                    $("#MCTaskForm").clearForm();
+                    $('#MCTaskForm').toggle();
+                    $('#addMCTaskBtn').show();
+                    $('#hideMCTaskFormBtn').hide();
+                    // здесь noty
+                    noty({text: 'Задание отправлено', layout: 'topRight', type:'information',   closeWith: ['hover']});
+                    $('#resultDiv').hide();
+                }
+                
+                function checkFieldsHash(formData, jqForm, options) {
+                    $("#HashTaskForm").clearForm();
+                    $('#HashTaskForm').toggle();
+                    $('#addHashTaskBtn').show();
+                    $('#hideHashTaskFormBtn').hide();
                     // здесь noty
                     noty({text: 'Задание отправлено', layout: 'topRight', type:'information',   closeWith: ['hover']});
                     $('#resultDiv').hide();
@@ -63,29 +80,51 @@
                     $('#resultDiv').show();
                 }
                 
-                $('#taskForm').ajaxForm(options);
+                $('#MCTaskForm').ajaxForm(optionsMC);
+                $('#HashTaskForm').ajaxForm(optionsHash);
                
                 
                 
                 // при нажатии кнопки показать форму
-                $('#addTaskBtn').click(function(event) {
+                $('#addMCTaskBtn').click(function(event) {
                     refrAgents();
-                    $('#taskForm').toggle();
-                    $('#addTaskBtn').hide();
-                    $('#hideTaskFormBtn').show();
+                    $('#MCTaskForm').toggle();
+                    $('#addMCTaskBtn').hide();
+                    $('#hideMCTaskFormBtn').show();
+                    $('#resultDiv').hide();
+                });
+                
+                // при нажатии кнопки показать форму
+                $('#addHashTaskBtn').click(function(event) {
+                    refrAgents();
+                    $('#HashTaskForm').toggle();
+                    $('#addHashTaskBtn').hide();
+                    $('#hideHashTaskFormBtn').show();
                     $('#resultDiv').hide();
                 });
                 
                 // при нажатии кнопки обновить клиенты с чекбоксами
-                $('#refrBtn').click(function(event) {
+                $('#refrMCBtn').click(function(event) {
+                    refrAgents();
+                });
+                
+                // при нажатии кнопки обновить клиенты с чекбоксами
+                $('#refrHashBtn').click(function(event) {
                     refrAgents();
                 });
                 
                 // при нажатии кнопки спрятать форму
-                $('#hideTaskFormBtn').click(function(event) {
-                    $('#taskForm').toggle();
-                    $('#addTaskBtn').show();
-                    $('#hideTaskFormBtn').hide();
+                $('#hideMCTaskFormBtn').click(function(event) {
+                    $('#MCTaskForm').toggle();
+                    $('#addMCTaskBtn').show();
+                    $('#hideMCTaskFormBtn').hide();
+                });
+                
+                // при нажатии кнопки спрятать форму
+                $('#hideHashTaskFormBtn').click(function(event) {
+                    $('#HashTaskForm').toggle();
+                    $('#addHashTaskBtn').show();
+                    $('#hideHashTaskFormBtn').hide();
                 });
                 
                 function refrAgents(){
@@ -93,7 +132,8 @@
                         type: "GET",
                         url: "GetAgents"
                     }).done(function() {
-                        $('#agentsTask').load("freeAgentsCheckbox.jsp");
+                        $('#agentsMCTask').load("freeAgentsCheckbox.jsp");
+                         $('#agentsHashTask').load("freeAgentsCheckbox.jsp");
                     });
                 }
             });
@@ -121,8 +161,9 @@
                     </div>
                     <div class="span8">
                         <!-- Спрятать форму под кнопку -->
-                        <button class="btn btn-primary" id="addTaskBtn">Новое задание</button>
-                        <form id="taskForm" action="<c:url value="/SendTask"/>" method="post">
+                        <button class="btn btn-primary" id="addMCTaskBtn">Новое задание: Интеграл</button>
+                        <button class="btn btn-primary" id="addHashTaskBtn">Новое задание: Хеш</button>
+                        <form id="MCTaskForm" action="<c:url value="/SendMCTask"/>" method="post">
                             <fieldset>
                                 <legend>Вычислить определенный интеграл.</legend>
                                 <label for="func">(*)Функция f(x)= <em></em></label>
@@ -132,17 +173,60 @@
                                 <label for="binterval">до <em></em></label>
                                 <input type="text" class="input-small" name="binterval" placeholder="b">
                                 <label for="dots">Количество точек <em></em></label>
-                                <input type="text" class="input-medium" name="dots" value="100000">
-                                <label for="agentsCheckBox">Отправить агентам: <em></em></label>
-                                <button class="btn btn-mini" type="button" id="refrBtn">Обновить</button>
-                                <div id="agentsTask">
+                                <input type="text" class="input-medium" name="dots" value="10000">
+                                <label for="agentsCheckBox">Отправить агентам: <button class="btn btn-mini" type="button" id="refrMCBtn">Обновить</button></label>
+                                
+                                <div id="agentsMCTask">
                                     <!-- Список свободных агентов с чекбоксами -->
                                     <!-- Подгружается из freeAgentsCheckbox.jsp -->
                                 </div>
-                                <button type="submit" class="btn">Отправить задание</button>
+                                <button type="submit" class="btn btn-success">Отправить задание</button>
+                                <a class="btn btn-mini" id="hideMCTaskFormBtn">Убрать форму</a>
                             </fieldset>
                         </form>
-                        <button class="btn btn-primary" id="hideTaskFormBtn">Убрать форму</button>
+                        
+
+
+                        
+                        <form id="HashTaskForm" action="<c:url value="/SendHashTask"/>" method="post">
+                            <fieldset>
+                                <legend>Определить пароль:</legend>
+                                <label for="func">(*)Хеш</label>
+                                <input class="input-xxlarge" type="text" name="hash">
+                                <label>Количество символов:</label>
+                                <label class="radio inline">
+                                    <input type="radio" name ="symCountRadio" value="3" checked="true">3
+                                </label>
+                                <label class="radio inline">
+                                    <input type="radio" name ="symCountRadio" value="4">4
+                                </label>
+                                <label class="radio inline">
+                                    <input type="radio" name ="symCountRadio" value="5">5
+                                </label>
+                                
+                                <label>Алфавит:</label>
+                                <label class="checkbox">
+                                    <input type="checkbox" name ="alphabetCheckBox" value="abc">abcd...
+                                </label>
+                                <label class="checkbox">
+                                    <input type="checkbox" name ="alphabetCheckBox" value="ABC">ABCD...
+                                </label>
+                                <label class="checkbox">
+                                    <input type="checkbox" name ="alphabetCheckBox" value="123">1234...
+                                </label>
+
+                                <label for="agentsCheckBox">Отправить агентам: <button class="btn btn-mini" type="button" id="refrHashBtn">Обновить</button></label>
+                                
+                                <div id="agentsHashTask">
+                                    <!-- Список свободных агентов с чекбоксами -->
+                                    <!-- Подгружается из freeAgentsCheckbox.jsp -->
+                                </div>
+                                <button type="submit" class="btn btn-success">Отправить задание</button>
+                                <a class="btn btn-mini" id="hideHashTaskFormBtn">Убрать форму</a>
+                            </fieldset>
+                        </form>
+                        
+
                         <div id="alertsDiv">
                             <!-- здесь загружаются alert из alerts.jsp-->
                         </div>

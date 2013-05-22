@@ -3,7 +3,6 @@
  * and open the template in the editor.
  */
 
-
 import compute.Compute;
 
 /**
@@ -15,8 +14,26 @@ public class AgentInfo {
     private Integer id;
     private Compute stub;
     private String ip;
+    private String taskType;
     private boolean free;
+    private String result;
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
     // еще чтото
+
+    public String getTaskType() {
+        return taskType;
+    }
+
+    public void setTaskType(String taskType) {
+        this.taskType = taskType;
+    }
 
     public boolean isFree() {
         return free;
@@ -24,6 +41,11 @@ public class AgentInfo {
 
     public void setFree(boolean isFree) {
         this.free = isFree;
+    }
+
+    public void setFree(boolean isFree, String taskType) {
+        this.free = isFree;
+        this.taskType = taskType;
     }
 
     public AgentInfo(Integer id, Compute stub, String ip, boolean free) {
@@ -66,7 +88,7 @@ public class AgentInfo {
         this.ip = ip;
         this.free = true;
     }
-    
+
     @Override
     public String toString() {
         return "id=" + id + "; ip=" + ip;

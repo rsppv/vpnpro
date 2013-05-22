@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  *
  * @author aipova
  */
-public class MonteCarlo implements Task, Serializable {
+public class MonteCarlo implements Task<Double>, Serializable {
 
     private static final long serialVersionUID = 227L;
     String function;
@@ -41,7 +41,7 @@ public class MonteCarlo implements Task, Serializable {
 
     @Override
     public Double execute() {
-        System.out.println("Task recieved!");
+        System.out.println("Integral task recieved!");
         System.out.println("Executing task...");
 
         Interpreter interpreter = new Interpreter();

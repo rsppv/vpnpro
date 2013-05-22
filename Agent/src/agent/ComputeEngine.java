@@ -18,7 +18,7 @@ public class ComputeEngine implements Compute {
     }
 
     @Override
-    public Double executeTask(Task t) {
+    public <T> T executeTask(Task<T> t) {
         return t.execute();
     }
 }
